@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "crSpNbH8z3Q=",
+  "success": true,
+  "projectFilePath": "e:\\Mods\\RuneRim\\Source\\RuneRim\\RuneRim.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\renfx\\.nuget\\packages\\krafs.rimworld.ref\\1.6.4630\\krafs.rimworld.ref.1.6.4630.nupkg.sha512",
+    "C:\\Users\\renfx\\.nuget\\packages\\lib.harmony\\2.4.2\\lib.harmony.2.4.2.nupkg.sha512"
+  ],
+  "logs": []
+}

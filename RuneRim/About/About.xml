@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>RuneRim</name>
+  <author>Your Name</author>
+  <packageId>yourname.runerim</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Adds a runic system with magical abilities. Craft runes, equip them in special slots, and gain powerful abilities!</description>
+  <modDependencies>
+    <li>
+      <packageId>ludeon.rimworld</packageId>
+      <displayName>Core</displayName>
+    </li>
+    <li>
+      <packageId>ludeon.rimworld.royalty</packageId>
+      <displayName>Royalty</displayName>
+    </li>
+  </modDependencies>
+</ModMetaData>

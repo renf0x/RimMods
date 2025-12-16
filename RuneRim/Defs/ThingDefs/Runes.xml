@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- БАЗОВАЯ РУНА (абстрактная) -->
+  <ThingDef ParentName="ApparelBase" Name="RuneBase" Abstract="True">
+    <techLevel>Medieval</techLevel>
+    <smeltable>false</smeltable>
+    <graphicData>
+      <texPath>Things/Item/Resource/Gold</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>50</MaxHitPoints>
+      <Mass>0.2</Mass>
+      <MarketValue>500</MarketValue>
+    </statBases>
+    <!-- CompProperties_Quality УДАЛЁН -->
+    <generateCommonality>0</generateCommonality>
+    <apparel>
+      <bodyPartGroups>
+        <li>Torso</li>
+      </bodyPartGroups>
+      <layers>
+        <li>RuneSlot1</li>
+        <li>RuneSlot2</li>
+        <li>RuneSlot3</li>
+      </layers>
+      <tags>
+        <li>Rune</li>
+      </tags>
+      <canBeDesiredForIdeo>false</canBeDesiredForIdeo>
+      <countsAsClothingForNudity>false</countsAsClothingForNudity>
+    </apparel>
+    <thingCategories>
+      <li>Apparel</li>
+    </thingCategories>
+  </ThingDef>
+
+  <!-- РУНА ОГНЯ (атакующая) -->
+  <ThingDef ParentName="RuneBase">
+    <defName>RuneRim_FireRune</defName>
+    <label>fire rune</label>
+    <description>A mystical rune inscribed with ancient fire symbols. When worn, grants the ability to cast fireballs at enemies. Can be equipped in any rune slot.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
+    <graphicData>
+      <texPath>Things/Item/Rune/FireRune</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <comps>
+      <li Class="RuneRim.CompProperties_Rune">
+        <abilityDef>RuneRim_Fireball</abilityDef>
+        <baseUses>4</baseUses>
+      </li>
+    </comps>
+  </ThingDef> 
+
+</Defs>

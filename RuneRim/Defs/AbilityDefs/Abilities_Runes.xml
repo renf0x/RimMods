@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+
+  <!-- FIREBALL ABILITY -->
+  <AbilityDef>
+    <defName>RuneRim_Fireball</defName>
+    <label>fireball</label>
+    <description>Hurl a ball of fire at a target, causing burn damage and setting them ablaze.</description>
+    <iconPath>Things/Item/Resource/ComponentIndustrial</iconPath>
+    <cooldownTicksRange>300</cooldownTicksRange>
+    <aiCanUse>true</aiCanUse>
+    <displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
+    <disableGizmoWhileUndrafted>false</disableGizmoWhileUndrafted>
+    <hostile>true</hostile>
+    <casterMustBeCapableOfViolence>true</casterMustBeCapableOfViolence>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <range>25</range>
+      <warmupTime>0.2</warmupTime>
+      <soundCast>Shot_TurretSniper</soundCast>
+      <targetParams>
+        <canTargetLocations>false</canTargetLocations>
+        <canTargetPawns>true</canTargetPawns>
+        <canTargetBuildings>false</canTargetBuildings>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class="CompProperties_AbilityLaunchProjectile">
+        <projectileDef>RuneRim_Projectile_Fireball</projectileDef>
+      </li>
+    </comps>
+  </AbilityDef>
+
+  <!-- Projectile для фаербола -->
+  <ThingDef ParentName="BaseBullet">
+    <defName>RuneRim_Projectile_Fireball</defName>
+    <label>fireball</label>
+    <graphicData>
+      <texPath>Things/Projectile/Fireball</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>TransparentPostLight</shaderType>
+      <color>(255,150,0)</color>
+    </graphicData>
+    <projectile>
+      <damageDef>Flame</damageDef>
+      <damageAmountBase>15</damageAmountBase>
+      <speed>45</speed>
+    </projectile>
+  </ThingDef>
+
+</Defs>

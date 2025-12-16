@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <!-- ЗВУК: Lightning Strike Cast -->
+  <!-- ЗВУК: Fireball Cast -->
   <SoundDef>
-    <defName>RuneRim_LightningStrike_Cast</defName>
+    <defName>RuneRim_Fireball_Cast</defName>
     <context>MapOnly</context>
-    <eventNames />
-    <maxSimultaneous>3</maxSimultaneous>
+    <maxSimultaneous>5</maxSimultaneous>
     <subSounds>
       <li>
         <grains>
           <li Class="AudioGrain_Clip">
-            <clipPath>Abilities/FireShield_Toggle</clipPath>
+            <clipPath>Abilities/Fireball_Cast</clipPath> 
           </li>
         </grains>
-        <volumeRange>45~55</volumeRange>
+        <volumeRange>40~50</volumeRange>
         <pitchRange>0.95~1.05</pitchRange>
         <sustainLoop>false</sustainLoop>
       </li>
     </subSounds>
   </SoundDef>
+
+  <!-- Остальные звуки будут использовать ванильные, пока не добавишь файлы -->
 
 </Defs>

@@ -19,6 +19,7 @@ namespace RuneRim
                 if (remainingUses < 0)
                 {
                     remainingUses = CalculateMaxUses();
+                    Log.Message($"RuneRim: Initializing {parent.Label} with {remainingUses} charges (quality check on first access)");
                 }
                 return remainingUses;
             }
@@ -33,35 +34,44 @@ namespace RuneRim
             Scribe_Collections.Look(ref originalLayers, "originalLayers", LookMode.Def);
         }
 
-        public override void PostPostMake()
-        {
-            base.PostPostMake();
-            remainingUses = CalculateMaxUses();
-        }
+        // ❌ УБИРАЕМ PostPostMake() - качество ещё не установлено!
+        // public override void PostPostMake() - УДАЛЕНО
 
         private int CalculateMaxUses()
         {
             if (parent.TryGetQuality(out QualityCategory quality))
             {
+                int maxUses;
                 switch (quality)
                 {
                     case QualityCategory.Awful:
-                        return 1;
+                        maxUses = 1;
+                        break;
                     case QualityCategory.Poor:
-                        return 2;
+                        maxUses = 2;
+                        break;
                     case QualityCategory.Normal:
-                        return Props.baseUses;
+                        maxUses = Props.baseUses;
+                        break;
                     case QualityCategory.Good:
-                        return Props.baseUses + 2;
+                        maxUses = Props.baseUses + 2;
+                        break;
                     case QualityCategory.Excellent:
-                        return Props.baseUses + 4;
+                        maxUses = Props.baseUses + 4;
+                        break;
                     case QualityCategory.Masterwork:
-                        return Props.baseUses + 6;
+                        maxUses = Props.baseUses + 6;
+                        break;
                     case QualityCategory.Legendary:
-                        return Props.baseUses + 8;
+                        maxUses = Props.baseUses + 8;
+                        break;
                     default:
-                        return Props.baseUses;
+                        maxUses = Props.baseUses;
+                        break;
                 }
+                
+                Log.Message($"RuneRim: {parent.Label} quality={quality}, maxUses={maxUses}");
+                return maxUses;
             }
             
             Log.Warning($"RuneRim: {parent.Label} has no quality! Using base charges: {Props.baseUses}");
@@ -71,6 +81,7 @@ namespace RuneRim
         public void ConsumeUse()
         {
             remainingUses--;
+            Log.Message($"RuneRim: {parent.Label} consumed charge. Remaining: {remainingUses}");
             
             if (remainingUses <= 0)
             {
@@ -83,13 +94,11 @@ namespace RuneRim
                 // Проверяем, где находится руна
                 if (parent.Spawned)
                 {
-                    // Руна на карте (не надета)
                     dropPosition = parent.Position;
                     map = parent.Map;
                 }
                 else if (parent.ParentHolder is Pawn_ApparelTracker apparelTracker)
                 {
-                    // Руна надета на колонисте
                     Pawn wearer = apparelTracker.pawn;
                     if (wearer != null && wearer.Spawned)
                     {
@@ -103,8 +112,8 @@ namespace RuneRim
                     MessageTypeDefOf.NeutralEvent
                 );
 
-                // 100% шанс выпадения для теста (потом смени на 0.05f)
-                if (Rand.Chance(1f))
+                // 10% шанс выпадения для теста (потом смени на 0.05f)
+                if (Rand.Chance(0.10f))
                 {
                     ThingDef fragmentDef = DefDatabase<ThingDef>.GetNamedSilentFail("RuneRim_RuneFragment");
                     
@@ -145,7 +154,8 @@ namespace RuneRim
 
         public override string CompInspectStringExtra()
         {
-            return $"Remaining uses: {RemainingUses}/{CalculateMaxUses()}";
+            string qualityStr = parent.TryGetQuality(out QualityCategory quality) ? quality.ToString() : "No Quality";
+            return $"Remaining uses: {RemainingUses}/{CalculateMaxUses()} (Quality: {qualityStr})";
         }
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()

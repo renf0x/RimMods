@@ -7,7 +7,7 @@
     <label>fireball</label>
     <description>Hurl a ball of fire at a target, causing burn damage and setting them ablaze.</description>
     <iconPath>Things/Item/Resource/ComponentIndustrial</iconPath>
-    <cooldownTicksRange>300</cooldownTicksRange>
+    <cooldownTicksRange>400</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
     <disableGizmoWhileUndrafted>false</disableGizmoWhileUndrafted>
@@ -15,8 +15,8 @@
     <casterMustBeCapableOfViolence>true</casterMustBeCapableOfViolence>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
-      <range>25</range>
-      <warmupTime>0.2</warmupTime>
+      <range>20</range>
+      <warmupTime>0.5</warmupTime>
       <soundCast>RuneRim_Fireball_Cast</soundCast>
       <targetParams>
         <canTargetLocations>false</canTargetLocations>
@@ -62,8 +62,8 @@
     <casterMustBeCapableOfViolence>true</casterMustBeCapableOfViolence>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
-      <range>25</range>
-      <warmupTime>0.5</warmupTime>
+      <range>20</range>
+      <warmupTime>0.10</warmupTime>
       <soundCast>Thunder_OnMap</soundCast>
       <targetParams>
         <canTargetLocations>false</canTargetLocations>
@@ -77,7 +77,7 @@
     <comps>
       <li Class="RuneRim.CompProperties_AbilityLightningStrike">
         <damage>20</damage>
-        <stunChance>0.05</stunChance>
+        <stunChance>0.15</stunChance>
         <stunDurationTicks>180</stunDurationTicks>
       </li>
     </comps>

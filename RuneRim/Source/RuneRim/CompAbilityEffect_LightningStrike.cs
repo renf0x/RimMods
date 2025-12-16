@@ -9,7 +9,7 @@ namespace RuneRim
     public class CompProperties_AbilityLightningStrike : CompProperties_AbilityEffect
     {
         public float damage = 20f;
-        public float stunChance = 0.05f;
+        public float stunChance = 0.15f;
         public int stunDurationTicks = 180;
 
         public CompProperties_AbilityLightningStrike()

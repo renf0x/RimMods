@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- ОСКОЛКИ РУН (ресурс) -->
+  <ThingDef ParentName="ResourceBase">
+    <defName>RuneRim_RuneFragment</defName>
+    <label>rune fragment</label>
+    <description>Mystical fragments that remain after a rune crumbles. These can be used to craft new runes, containing residual magical energy.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/RuneFragment</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <stackLimit>75</stackLimit>
+    <statBases>
+      <MaxHitPoints>50</MaxHitPoints>
+      <MarketValue>25</MarketValue>
+      <Mass>0.1</Mass>
+      <Flammability>0</Flammability>
+      <DeteriorationRate>0.5</DeteriorationRate>
+    </statBases>
+    <intricate>true</intricate>
+    <thingCategories>
+      <li>ResourcesRaw</li>
+    </thingCategories>
+    <useHitPoints>true</useHitPoints>
+    <healthAffectsPrice>false</healthAffectsPrice>
+    <minRewardCount>5</minRewardCount>
+  </ThingDef>
+
+</Defs>

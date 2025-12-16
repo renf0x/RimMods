@@ -100,6 +100,7 @@
       <verbClass>Verb_CastAbility</verbClass>
       <range>0</range>
       <warmupTime>0.5</warmupTime>
+      <soundCast>Interact_Incinerate</soundCast>
       <targetParams>
         <canTargetSelf>true</canTargetSelf>
       </targetParams>

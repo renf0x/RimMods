@@ -69,10 +69,51 @@ namespace RuneRim
         public void ConsumeUse()
         {
             remainingUses--;
+            
             if (remainingUses <= 0)
             {
-                Messages.Message($"{parent.Label} has crumbled to dust after exhausting its power.", 
-                    MessageTypeDefOf.NeutralEvent);
+                // Сохраняем позицию и карту перед уничтожением
+                IntVec3 position = parent.Position;
+                Map map = parent.Map;
+                string runeLabel = parent.Label;
+                
+                Messages.Message(
+                    $"{runeLabel} has crumbled to dust after exhausting its power.", 
+                    MessageTypeDefOf.NeutralEvent
+                );
+
+                // 5% шанс выпадения осколков (1-3 штуки)
+                if (Rand.Chance(1f))
+                {
+                    ThingDef fragmentDef = DefDatabase<ThingDef>.GetNamedSilentFail("RuneRim_RuneFragment");
+                    
+                    if (fragmentDef != null)
+                    {
+                        int fragmentCount = Rand.RangeInclusive(1, 3);
+                        
+                        Thing fragments = ThingMaker.MakeThing(fragmentDef);
+                        fragments.stackCount = fragmentCount;
+                        
+                        // Дроп осколков на позицию руны
+                        if (map != null && position.IsValid)
+                        {
+                            GenPlace.TryPlaceThing(fragments, position, map, ThingPlaceMode.Near);
+                            
+                            Messages.Message(
+                                $"{fragmentCount}x rune fragment{(fragmentCount > 1 ? "s" : "")} dropped from {runeLabel}!",
+                                new TargetInfo(position, map),
+                                MessageTypeDefOf.PositiveEvent
+                            );
+                            
+                            Log.Message($"RuneRim: Dropped {fragmentCount} rune fragment(s) at {position}");
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning("RuneRim: RuneRim_RuneFragment ThingDef not found!");
+                    }
+                }
+                
                 parent.Destroy(DestroyMode.Vanish);
             }
         }

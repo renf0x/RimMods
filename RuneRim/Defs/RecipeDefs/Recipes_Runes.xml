@@ -15,11 +15,11 @@
     <ingredients>
       <li>
         <filter>
-          <categories>
-            <li>StoneChunks</li>
-          </categories>
+          <thingDefs>
+            <li>RuneRim_RuneFragment</li>
+          </thingDefs>
         </filter>
-        <count>1</count>
+        <count>5</count>
       </li>
       <li>
         <filter>
@@ -31,10 +31,8 @@
       </li>
     </ingredients>
     <fixedIngredientFilter>
-      <categories>
-        <li>StoneChunks</li>
-      </categories>
       <thingDefs>
+        <li>RuneRim_RuneFragment</li>
         <li>Silver</li>
       </thingDefs>
     </fixedIngredientFilter>
@@ -65,11 +63,11 @@
     <ingredients>
       <li>
         <filter>
-          <categories>
-            <li>StoneChunks</li>
-          </categories>
+          <thingDefs>
+            <li>RuneRim_RuneFragment</li>
+          </thingDefs>
         </filter>
-        <count>1</count>
+        <count>5</count>
       </li>
       <li>
         <filter>
@@ -89,10 +87,8 @@
       </li>
     </ingredients>
     <fixedIngredientFilter>
-      <categories>
-        <li>StoneChunks</li>
-      </categories>
       <thingDefs>
+        <li>RuneRim_RuneFragment</li>
         <li>Gold</li>
         <li>Steel</li>
       </thingDefs>
@@ -124,11 +120,11 @@
     <ingredients>
       <li>
         <filter>
-          <categories>
-            <li>StoneChunks</li>
-          </categories>
+          <thingDefs>
+            <li>RuneRim_RuneFragment</li>
+          </thingDefs>
         </filter>
-        <count>2</count>
+        <count>5</count>
       </li>
       <li>
         <filter>
@@ -148,10 +144,8 @@
       </li>
     </ingredients>
     <fixedIngredientFilter>
-      <categories>
-        <li>StoneChunks</li>
-      </categories>
       <thingDefs>
+        <li>RuneRim_RuneFragment</li>
         <li>Gold</li>
         <li>Plasteel</li>
       </thingDefs>

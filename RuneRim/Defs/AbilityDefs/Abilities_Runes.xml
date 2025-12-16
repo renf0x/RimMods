@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-
   <!-- FIREBALL ABILITY -->
   <AbilityDef>
     <defName>RuneRim_Fireball</defName>
@@ -48,5 +47,29 @@
       <speed>45</speed>
     </projectile>
   </ThingDef>
+
+  <!-- FIRE SHIELD ABILITY (защитная) -->
+  <AbilityDef ParentName="AbilityTouchBase">
+    <defName>RuneRim_FireShield</defName>
+    <label>fire shield</label>
+    <description>Summon a protective shield of flames that increases armor by 5% and has a 30% chance to burn nearby enemies. Lasts 30 seconds. Can be toggled on/off.</description>
+    <iconPath>UI/Abilities/FireShield</iconPath>
+    <cooldownTicksRange>300</cooldownTicksRange>
+    <aiCanUse>true</aiCanUse>
+    <displayGizmoWhileUndrafted>true</displayGizmoWhileUndrafted>
+    <disableGizmoWhileUndrafted>false</disableGizmoWhileUndrafted>
+    <jobDef>CastAbilityOnThingMelee</jobDef>
+    <targetRequired>false</targetRequired>
+    <!-- УДАЛЕНО: canTargetSelf на уровне AbilityDef не существует -->
+    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <range>0</range>
+      <warmupTime>0.5</warmupTime>
+      <targetParams>
+        <canTargetSelf>true</canTargetSelf>
+      </targetParams>
+    </verbProperties>
+  </AbilityDef>
 
 </Defs>

@@ -14,7 +14,6 @@
       <Mass>0.2</Mass>
       <MarketValue>500</MarketValue>
     </statBases>
-    <!-- CompProperties_Quality УДАЛЁН -->
     <generateCommonality>0</generateCommonality>
     <apparel>
       <bodyPartGroups>
@@ -51,6 +50,23 @@
         <baseUses>4</baseUses>
       </li>
     </comps>
-  </ThingDef> 
+  </ThingDef>
+
+  <!-- РУНА ОГНЕННОГО ЩИТА (защитная) - НОВАЯ -->
+  <ThingDef ParentName="RuneBase">
+    <defName>RuneRim_FireShieldRune</defName>
+    <label>fire shield rune</label>
+    <description>A protective rune imbued with defensive fire magic. When worn, grants the ability to conjure a flaming shield that increases armor and burns nearby enemies. Can be equipped in any rune slot.\n\nShield lasts 30 seconds and can be toggled on/off.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
+    <graphicData>
+      <texPath>Things/Item/Rune/FireShieldRune</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <comps>
+      <li Class="RuneRim.CompProperties_Rune">
+        <abilityDef>RuneRim_FireShield</abilityDef>
+        <baseUses>4</baseUses>
+      </li>
+    </comps>
+  </ThingDef>
 
 </Defs>

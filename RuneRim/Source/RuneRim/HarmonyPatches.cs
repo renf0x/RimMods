@@ -69,61 +69,86 @@ namespace RuneRim
         }
     }
 
-    // ОБЪЕДИНЕННЫЙ ПАТЧ С ЛОГАМИ: потребление заряда + применение Fire Shield
+    // Патч для активации способностей и потребления зарядов
     [HarmonyPatch(typeof(Ability))]
     public static class Ability_Activate_Patch
     {
-        // Указываем конкретную сигнатуру метода
         static MethodBase TargetMethod()
         {
-            var method = typeof(Ability).GetMethod("Activate", 
-                BindingFlags.Public | BindingFlags.Instance,
-                null,
-                new[] { typeof(LocalTargetInfo), typeof(LocalTargetInfo) }, 
-                null);
-            
-            Log.Message($"RuneRim: TargetMethod Ability.Activate found: {method != null}");
+            var method = typeof(Ability).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .FirstOrDefault(m => m.Name == "Activate" && m.GetParameters().Length == 2);
+    
+            if (method == null)
+            {
+                Log.Error("RuneRim: Failed to patch Ability.Activate! Game version may be incompatible.");
+                return null;
+            }
+
+            Log.Message("RuneRim: Successfully patched Ability.Activate");
             return method;
         }
 
         public static void Postfix(Ability __instance, LocalTargetInfo target)
         {
-            Log.Message($"RuneRim: Ability_Activate_Patch called for ability: {__instance?.def?.defName ?? "NULL"}");
-            
-            if (__instance.pawn == null)
+            if (__instance?.pawn == null)
             {
-                Log.Warning("RuneRim: Ability pawn is null!");
+                Log.Warning("RuneRim: Ability or pawn is null!");
                 return;
             }
 
-            Log.Message($"RuneRim: Ability activated by {__instance.pawn.Name.ToStringShort}");
+            Pawn caster = __instance.pawn;
 
-            // 1. СПЕЦИАЛЬНАЯ ЛОГИКА ДЛЯ FIRE SHIELD - применяем Hediff на себя
+            // СПЕЦИАЛЬНАЯ ЛОГИКА ДЛЯ FIRE SHIELD - Toggle механика
             if (__instance.def.defName == "RuneRim_FireShield")
             {
-                Log.Message("RuneRim: Fire Shield detected! Applying hediff...");
-                
-                Pawn caster = __instance.pawn;
                 HediffDef hediffDef = DefDatabase<HediffDef>.GetNamed("RuneRim_FireShieldHediff", false);
                 
                 if (hediffDef != null)
                 {
-                    Log.Message("RuneRim: HediffDef found, creating and adding hediff...");
-                    Hediff hediff = HediffMaker.MakeHediff(hediffDef, caster);
-                    caster.health.AddHediff(hediff);
+                    // Проверяем, активен ли уже щит
+                    Hediff existingShield = caster.health.hediffSet.GetFirstHediffOfDef(hediffDef);
                     
-                    Log.Message($"RuneRim: Fire Shield hediff successfully added to {caster.Name.ToStringShort}!");
-                    
-                    Messages.Message(
-                        $"{caster.Name.ToStringShort} activated fire shield!",
-                        caster,
-                        MessageTypeDefOf.PositiveEvent
-                    );
-                    
-                    // Визуальный эффект
-                    if (caster.Spawned && caster.Map != null)
+                    if (existingShield != null)
                     {
-                        FleckMaker.ThrowFireGlow(caster.Position.ToVector3Shifted(), caster.Map, 1.5f);
+                        // Щит активен - ОТКЛЮЧАЕМ
+                        caster.health.RemoveHediff(existingShield);
+                        
+                        Messages.Message(
+                            $"{caster.Name.ToStringShort} deactivated fire shield.",
+                            caster,
+                            MessageTypeDefOf.NeutralEvent
+                        );
+                        
+                        // Визуальный эффект отключения
+                        if (caster.Spawned && caster.Map != null)
+                        {
+                            FleckMaker.ThrowSmoke(caster.Position.ToVector3Shifted(), caster.Map, 1f);
+                        }
+                        
+                        Log.Message($"RuneRim: Fire Shield deactivated for {caster.Name.ToStringShort}");
+                    }
+                    else
+                    {
+                        // Щит не активен - ВКЛЮЧАЕМ
+                        Hediff hediff = HediffMaker.MakeHediff(hediffDef, caster);
+                        caster.health.AddHediff(hediff);
+                        
+                        Messages.Message(
+                            $"{caster.Name.ToStringShort} activated fire shield!",
+                            caster,
+                            MessageTypeDefOf.PositiveEvent
+                        );
+                        
+                        // Визуальный эффект активации (3 огненные вспышки)
+                        if (caster.Spawned && caster.Map != null)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                FleckMaker.ThrowFireGlow(caster.Position.ToVector3Shifted(), caster.Map, 1.5f);
+                            }
+                        }
+                        
+                        Log.Message($"RuneRim: Fire Shield activated for {caster.Name.ToStringShort}");
                     }
                 }
                 else
@@ -132,16 +157,16 @@ namespace RuneRim
                 }
             }
 
-            // 2. ОБЩАЯ ЛОГИКА - потребление заряда руны для ВСЕХ способностей
-            if (__instance.pawn.apparel != null)
+            // ОБЩАЯ ЛОГИКА - потребление заряда руны для ВСЕХ способностей
+            if (caster.apparel != null)
             {
-                foreach (var apparel in __instance.pawn.apparel.WornApparel)
+                foreach (var apparel in caster.apparel.WornApparel)
                 {
                     var compRune = apparel.TryGetComp<CompRune>();
                     if (compRune != null && compRune.Props.abilityDef == __instance.def)
                     {
-                        Log.Message($"RuneRim: Consuming rune use for {__instance.def.defName}");
                         compRune.ConsumeUse();
+                        Log.Message($"RuneRim: Consumed rune charge for {__instance.def.defName}");
                         break; // Потребляем только из одной руны
                     }
                 }

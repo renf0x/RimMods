@@ -17,7 +17,7 @@
       <verbClass>Verb_CastAbility</verbClass>
       <range>25</range>
       <warmupTime>0.2</warmupTime>
-      <soundCast>RuneRim_LightningStrike_Cast</soundCast>
+      <soundCast>RuneRim_Fireball_Cast</soundCast>
       <targetParams>
         <canTargetLocations>false</canTargetLocations>
         <canTargetPawns>true</canTargetPawns>

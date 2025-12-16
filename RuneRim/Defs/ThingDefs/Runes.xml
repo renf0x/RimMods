@@ -53,6 +53,29 @@
     </comps>
   </ThingDef>
 
+  <!-- РУНА МОЛНИИ (атакующая) -->
+  <ThingDef ParentName="RuneBase">
+    <defName>RuneRim_LightningRune</defName>
+    <label>lightning rune</label>
+    <description>A mystical rune crackling with electrical energy. When worn, grants the ability to summon lightning strikes against enemies. Deals 20 damage with a 5% chance to stun the target for 3 seconds. Can be equipped in offensive rune slot 1 or 2.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
+    <graphicData>
+      <texPath>Things/Item/Rune/LightningRune</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <apparel>
+      <layers>
+        <li>RuneSlot_Offensive1</li>
+        <li>RuneSlot_Offensive2</li>
+      </layers>
+    </apparel>
+    <comps>
+      <li Class="RuneRim.CompProperties_Rune">
+        <abilityDef>RuneRim_LightningStrike</abilityDef>
+        <baseUses>4</baseUses>
+      </li>
+    </comps>
+  </ThingDef>
+
   <!-- РУНА ОГНЕННОГО ЩИТА (защитная) -->
   <ThingDef ParentName="RuneBase">
     <defName>RuneRim_FireShieldRune</defName>

@@ -50,6 +50,46 @@ namespace RuneRim
         }
     }
 
+    // КРИТИЧЕСКИЙ ПАТЧ: Предотвращаем снятие рун при надевании новой
+    [HarmonyPatch(typeof(JobDriver_Wear), "TryUnequipSomething")]
+    public static class JobDriver_Wear_TryUnequipSomething_Patch
+    {
+        public static bool Prefix(JobDriver_Wear __instance)
+        {
+            Pawn pawn = __instance.pawn;
+            Apparel newApparel = (Apparel)__instance.job.targetA.Thing;
+
+            // Проверяем, это руна с двумя слотами?
+            var compRune = newApparel.TryGetComp<CompRune>();
+            if (compRune == null) return true; // Не руна — стандартная логика
+
+            var slot1Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive1");
+            var slot2Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive2");
+
+            if (slot1Def == null || slot2Def == null) return true;
+
+            var layers = newApparel.def.apparel.layers;
+            if (layers.Contains(slot1Def) && layers.Contains(slot2Def))
+            {
+                // Это атакующая руна — проверяем, есть ли свободный слот
+                bool slot1Occupied = pawn.apparel.WornApparel.Any(a => 
+                    a.def.apparel.layers.Contains(slot1Def));
+                
+                bool slot2Occupied = pawn.apparel.WornApparel.Any(a => 
+                    a.def.apparel.layers.Contains(slot2Def));
+
+                // Если хотя бы один слот свободен, НЕ снимаем ничего
+                if (!slot1Occupied || !slot2Occupied)
+                {
+                    Log.Message("RuneRim: Free offensive slot available, not removing any rune");
+                    return false; // Отменяем оригинальный метод (ничего не снимаем)
+                }
+            }
+
+            return true; // Стандартная логика для остальных случаев
+        }
+    }
+
     // Патч для динамического назначения слота при надевании руны
     [HarmonyPatch(typeof(Pawn_ApparelTracker), "Wear")]
     public static class Pawn_ApparelTracker_Wear_Patch

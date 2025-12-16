@@ -1,6 +1,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -318,6 +319,71 @@ namespace RuneRim
                         Log.Message($"RuneRim: Consumed rune charge for {__instance.def.defName}");
                         break; // Потребляем только из одной руны
                     }
+                }
+            }
+        }
+    }
+
+    // ✅ НОВЫЙ ПАТЧ: Дроп осколков рун при добыче камня
+    [HarmonyPatch]
+    public static class Mineable_TrySpawnYield_Patch
+    {
+        static MethodBase TargetMethod()
+        {
+            var method = typeof(Mineable).GetMethod(
+                "TrySpawnYield",
+                BindingFlags.Public | BindingFlags.Instance,
+                null,
+                new Type[] { typeof(Map), typeof(bool), typeof(Pawn) },
+                null
+            );
+
+            if (method == null)
+            {
+                Log.Error("RuneRim: Failed to patch Mineable.TrySpawnYield!");
+                return null;
+            }
+
+            Log.Message("RuneRim: Successfully patched Mineable.TrySpawnYield");
+            return method;
+        }
+
+        public static void Postfix(Mineable __instance, Map map, bool moteOnWaste, Pawn pawn)
+        {
+            // 10% шанс выпадения осколков рун
+            if (Rand.Chance(0.1f))
+            {
+                ThingDef fragmentDef = DefDatabase<ThingDef>.GetNamedSilentFail("RuneRim_RuneFragment");
+                
+                if (fragmentDef != null)
+                {
+                    // 1-2 осколка
+                    int fragmentCount = Rand.RangeInclusive(1, 2);
+                    
+                    Thing fragments = ThingMaker.MakeThing(fragmentDef);
+                    fragments.stackCount = fragmentCount;
+                    
+                    IntVec3 position = __instance.Position;
+                    
+                    if (map != null && position.IsValid)
+                    {
+                        GenPlace.TryPlaceThing(fragments, position, map, ThingPlaceMode.Near);
+                        
+                        if (pawn != null)
+                        {
+                            Messages.Message(
+                                $"{pawn.LabelShort} found {fragmentCount}x rune fragment{(fragmentCount > 1 ? "s" : "")} while mining!",
+                                new TargetInfo(position, map),
+                                MessageTypeDefOf.PositiveEvent
+                            );
+                        }
+                        
+                        Log.Message($"RuneRim: Mined {fragmentCount} rune fragment(s) from {__instance.def.label} at {position}");
+                    }
+                }
+                else
+                {
+                    Log.Error("RuneRim: RuneRim_RuneFragment ThingDef not found!");
                 }
             }
         }

@@ -112,8 +112,8 @@ namespace RuneRim
                     MessageTypeDefOf.NeutralEvent
                 );
 
-                // 10% шанс выпадения для теста (потом смени на 0.05f)
-                if (Rand.Chance(0.10f))
+                // 100% шанс выпадения для теста (потом смени на 0.05f)
+                if (Rand.Chance(1f))
                 {
                     ThingDef fragmentDef = DefDatabase<ThingDef>.GetNamedSilentFail("RuneRim_RuneFragment");
                     

@@ -19,7 +19,6 @@ namespace RuneRim
                 if (remainingUses < 0)
                 {
                     remainingUses = CalculateMaxUses();
-                    Log.Message($"RuneRim: Initializing {parent.Label} with {remainingUses} charges (quality check on first access)");
                 }
                 return remainingUses;
             }
@@ -33,9 +32,6 @@ namespace RuneRim
             Scribe_References.Look(ref lastWearer, "lastWearer");
             Scribe_Collections.Look(ref originalLayers, "originalLayers", LookMode.Def);
         }
-
-        // ❌ УБИРАЕМ PostPostMake() - качество ещё не установлено!
-        // public override void PostPostMake() - УДАЛЕНО
 
         private int CalculateMaxUses()
         {
@@ -70,18 +66,15 @@ namespace RuneRim
                         break;
                 }
                 
-                Log.Message($"RuneRim: {parent.Label} quality={quality}, maxUses={maxUses}");
                 return maxUses;
             }
             
-            Log.Warning($"RuneRim: {parent.Label} has no quality! Using base charges: {Props.baseUses}");
             return Props.baseUses;
         }
 
         public void ConsumeUse()
         {
             remainingUses--;
-            Log.Message($"RuneRim: {parent.Label} consumed charge. Remaining: {remainingUses}");
             
             if (remainingUses <= 0)
             {
@@ -134,12 +127,6 @@ namespace RuneRim
                                 new TargetInfo(dropPosition, map),
                                 MessageTypeDefOf.PositiveEvent
                             );
-                            
-                            Log.Message($"RuneRim: Dropped {fragmentCount} rune fragment(s) at {dropPosition}");
-                        }
-                        else
-                        {
-                            Log.Warning($"RuneRim: Cannot drop fragments - invalid position or map. Position: {dropPosition}, Map: {map}");
                         }
                     }
                     else

@@ -32,20 +32,31 @@ namespace RuneRim
 
                 if (slot1Def == null || slot2Def == null) return;
 
-                // Проверяем, имеют ли оба предмета оба атакующих слота
-                bool AHasBothSlots = A.apparel?.layers != null && 
-                    A.apparel.layers.Contains(slot1Def) && 
-                    A.apparel.layers.Contains(slot2Def);
+                // Проверяем, есть ли у предметов CompProperties_Rune (это руны)
+                bool AIsOffensiveRune = false;
+                bool BIsOffensiveRune = false;
 
-                bool BHasBothSlots = B.apparel?.layers != null && 
-                    B.apparel.layers.Contains(slot1Def) && 
-                    B.apparel.layers.Contains(slot2Def);
+                // Проверяем A
+                var ARuneComp = A.comps?.FirstOrDefault(c => c is CompProperties_Rune);
+                if (ARuneComp != null)
+                {
+                    // Это руна - проверяем, является ли она атакующей (имеет хотя бы один из слотов)
+                    AIsOffensiveRune = (A.apparel?.layers != null) && 
+                        (A.apparel.layers.Contains(slot1Def) || A.apparel.layers.Contains(slot2Def));
+                }
 
-                // Если оба предмета — атакующие руны с двумя слотами, разрешаем носить вместе
-                if (AHasBothSlots && BHasBothSlots)
+                // Проверяем B
+                var BRuneComp = B.comps?.FirstOrDefault(c => c is CompProperties_Rune);
+                if (BRuneComp != null)
+                {
+                    BIsOffensiveRune = (B.apparel?.layers != null) && 
+                        (B.apparel.layers.Contains(slot1Def) || B.apparel.layers.Contains(slot2Def));
+                }
+
+                // Если оба предмета — атакующие руны, разрешаем носить вместе
+                if (AIsOffensiveRune && BIsOffensiveRune)
                 {
                     __result = true;
-                    Log.Message("RuneRim: Allowing two offensive runes to be worn together");
                 }
             }
         }
@@ -69,8 +80,12 @@ namespace RuneRim
 
             if (slot1Def == null || slot2Def == null) return true;
 
-            var layers = newApparel.def.apparel.layers;
-            if (layers.Contains(slot1Def) && layers.Contains(slot2Def))
+            // Используем оригинальные слоты, если они сохранены
+            var layersToCheck = compRune.originalLayers != null && compRune.originalLayers.Count > 0 
+                ? compRune.originalLayers 
+                : newApparel.def.apparel.layers;
+
+            if (layersToCheck.Contains(slot1Def) && layersToCheck.Contains(slot2Def))
             {
                 // Это атакующая руна — проверяем, есть ли свободный слот
                 bool slot1Occupied = pawn.apparel.WornApparel.Any(a => 
@@ -82,7 +97,6 @@ namespace RuneRim
                 // Если хотя бы один слот свободен, НЕ снимаем ничего
                 if (!slot1Occupied || !slot2Occupied)
                 {
-                    Log.Message("RuneRim: Free offensive slot available, not removing any rune");
                     return false; // Отменяем оригинальный метод (ничего не снимаем)
                 }
             }
@@ -100,14 +114,21 @@ namespace RuneRim
             var compRune = newApparel.TryGetComp<CompRune>();
             if (compRune == null) return;
 
-            // Проверяем, это атакующая руна с двумя слотами?
-            var layers = newApparel.def.apparel.layers;
             var slot1Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive1");
             var slot2Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive2");
 
             if (slot1Def == null || slot2Def == null) return;
 
-            if (layers.Contains(slot1Def) && layers.Contains(slot2Def))
+            // ВАЖНО: Сохраняем оригинальные layers перед ПЕРВЫМ изменением
+            if (compRune.originalLayers == null || compRune.originalLayers.Count == 0)
+            {
+                compRune.originalLayers = new List<ApparelLayerDef>(newApparel.def.apparel.layers);
+            }
+
+            var originalLayers = compRune.originalLayers;
+
+            // Проверяем, это атакующая руна с двумя слотами?
+            if (originalLayers.Contains(slot1Def) && originalLayers.Contains(slot2Def))
             {
                 // Определяем, какой слот свободен
                 bool slot1Occupied = __instance.WornApparel.Any(a => 
@@ -116,33 +137,24 @@ namespace RuneRim
                 bool slot2Occupied = __instance.WornApparel.Any(a => 
                     a.def.apparel.layers.Contains(slot2Def) && a != newApparel);
 
-                // ВАЖНО: Сохраняем оригинальные layers перед изменением
-                if (compRune.originalLayers == null || compRune.originalLayers.Count == 0)
-                {
-                    compRune.originalLayers = new List<ApparelLayerDef>(layers);
-                }
-
                 // Определяем, какой слот назначить
                 List<ApparelLayerDef> tempLayers = null;
                 
                 if (!slot1Occupied)
                 {
                     tempLayers = new List<ApparelLayerDef> { slot1Def };
-                    Log.Message($"RuneRim: Assigning {newApparel.Label} to Offensive Slot 1");
                 }
                 else if (!slot2Occupied)
                 {
                     tempLayers = new List<ApparelLayerDef> { slot2Def };
-                    Log.Message($"RuneRim: Assigning {newApparel.Label} to Offensive Slot 2");
                 }
                 else
                 {
                     // Оба слота заняты
-                    Log.Warning($"RuneRim: Both offensive slots occupied, cannot wear {newApparel.Label}");
                     return;
                 }
 
-                // Создаём НОВЫЙ список для layers (не перезаписываем оригинальный Def!)
+                // Создаём НОВЫЙ список для layers
                 if (tempLayers != null)
                 {
                     newApparel.def.apparel.layers = tempLayers;
@@ -162,7 +174,6 @@ namespace RuneRim
             {
                 // Восстанавливаем оригинальные layers
                 ap.def.apparel.layers = new List<ApparelLayerDef>(compRune.originalLayers);
-                Log.Message($"RuneRim: Restored original layers for {ap.Label}");
             }
         }
     }
@@ -182,7 +193,6 @@ namespace RuneRim
                 if (!__instance.pawn.abilities.abilities.Any(a => a.def == compRune.Props.abilityDef))
                 {
                     __instance.pawn.abilities.GainAbility(compRune.Props.abilityDef);
-                    Log.Message($"RuneRim: Added ability {compRune.Props.abilityDef.defName} to {__instance.pawn.Name}");
                 }
             }
         }
@@ -212,7 +222,6 @@ namespace RuneRim
                     if (ability != null)
                     {
                         __instance.pawn.abilities.RemoveAbility(compRune.Props.abilityDef);
-                        Log.Message($"RuneRim: Removed ability {compRune.Props.abilityDef.defName} from {__instance.pawn.Name}");
                     }
                 }
             }
@@ -234,21 +243,16 @@ namespace RuneRim
                 return null;
             }
 
-            Log.Message("RuneRim: Successfully patched Ability.Activate");
             return method;
         }
 
         public static void Postfix(Ability __instance, LocalTargetInfo target)
         {
-            if (__instance?.pawn == null)
-            {
-                Log.Warning("RuneRim: Ability or pawn is null!");
-                return;
-            }
+            if (__instance?.pawn == null) return;
 
             Pawn caster = __instance.pawn;
 
-            // СПЕЦИАЛЬНАЯ ЛОГИКА ДЛЯ FIRE SHIELD - Toggle механика
+            // СПЕЦИАЛЬНАЯ ЛОГИКА ДЛЯ FIRE SHIELD - активация без toggle
             if (__instance.def.defName == "RuneRim_FireShield")
             {
                 HediffDef hediffDef = DefDatabase<HediffDef>.GetNamed("RuneRim_FireShieldHediff", false);
@@ -260,22 +264,14 @@ namespace RuneRim
                     
                     if (existingShield != null)
                     {
-                        // Щит активен - ОТКЛЮЧАЕМ
-                        caster.health.RemoveHediff(existingShield);
-                        
+                        // Щит уже активен - НЕ ДЕЛАЕМ НИЧЕГО, просто возвращаемся
                         Messages.Message(
-                            $"{caster.Name.ToStringShort} deactivated fire shield.",
+                            $"{caster.Name.ToStringShort}'s fire shield is already active!",
                             caster,
-                            MessageTypeDefOf.NeutralEvent
+                            MessageTypeDefOf.RejectInput
                         );
                         
-                        // Визуальный эффект отключения
-                        if (caster.Spawned && caster.Map != null)
-                        {
-                            FleckMaker.ThrowSmoke(caster.Position.ToVector3Shifted(), caster.Map, 1f);
-                        }
-                        
-                        Log.Message($"RuneRim: Fire Shield deactivated for {caster.Name.ToStringShort}");
+                        return; // НЕ ПОТРЕБЛЯЕМ ЗАРЯД - выходим ДО общей логики
                     }
                     else
                     {
@@ -297,13 +293,12 @@ namespace RuneRim
                                 FleckMaker.ThrowFireGlow(caster.Position.ToVector3Shifted(), caster.Map, 1.5f);
                             }
                         }
-                        
-                        Log.Message($"RuneRim: Fire Shield activated for {caster.Name.ToStringShort}");
                     }
                 }
                 else
                 {
                     Log.Error("RuneRim: HediffDef 'RuneRim_FireShieldHediff' NOT FOUND!");
+                    return; // Не потребляем заряд при ошибке
                 }
             }
 
@@ -316,7 +311,6 @@ namespace RuneRim
                     if (compRune != null && compRune.Props.abilityDef == __instance.def)
                     {
                         compRune.ConsumeUse();
-                        Log.Message($"RuneRim: Consumed rune charge for {__instance.def.defName}");
                         break; // Потребляем только из одной руны
                     }
                 }

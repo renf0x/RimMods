@@ -17,7 +17,7 @@
       <verbClass>Verb_CastAbility</verbClass>
       <range>25</range>
       <warmupTime>0.2</warmupTime>
-      <soundCast>Shot_TurretSniper</soundCast>
+      <soundCast>RuneRim_LightningStrike_Cast</soundCast>
       <targetParams>
         <canTargetLocations>false</canTargetLocations>
         <canTargetPawns>true</canTargetPawns>

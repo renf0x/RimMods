@@ -19,11 +19,6 @@
       <bodyPartGroups>
         <li>Torso</li>
       </bodyPartGroups>
-      <layers>
-        <li>RuneSlot1</li>
-        <li>RuneSlot2</li>
-        <li>RuneSlot3</li>
-      </layers>
       <tags>
         <li>Rune</li>
       </tags>
@@ -39,11 +34,17 @@
   <ThingDef ParentName="RuneBase">
     <defName>RuneRim_FireRune</defName>
     <label>fire rune</label>
-    <description>A mystical rune inscribed with ancient fire symbols. When worn, grants the ability to cast fireballs at enemies. Can be equipped in any rune slot.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
+    <description>A mystical rune inscribed with ancient fire symbols. When worn, grants the ability to cast fireballs at enemies. Can be equipped in offensive rune slot 1 or 2.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
     <graphicData>
       <texPath>Things/Item/Rune/FireRune</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
+    <apparel>
+      <layers>
+        <li>RuneSlot_Offensive1</li>
+        <li>RuneSlot_Offensive2</li>
+      </layers>
+    </apparel>
     <comps>
       <li Class="RuneRim.CompProperties_Rune">
         <abilityDef>RuneRim_Fireball</abilityDef>
@@ -52,15 +53,20 @@
     </comps>
   </ThingDef>
 
-  <!-- РУНА ОГНЕННОГО ЩИТА (защитная) - НОВАЯ -->
+  <!-- РУНА ОГНЕННОГО ЩИТА (защитная) -->
   <ThingDef ParentName="RuneBase">
     <defName>RuneRim_FireShieldRune</defName>
     <label>fire shield rune</label>
-    <description>A protective rune imbued with defensive fire magic. When worn, grants the ability to conjure a flaming shield that increases armor and burns nearby enemies. Can be equipped in any rune slot.\n\nShield lasts 30 seconds and can be toggled on/off.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
+    <description>A protective rune imbued with defensive fire magic. When worn, grants the ability to conjure a flaming shield that increases armor and burns nearby enemies. Occupies the defensive rune slot.\n\nShield lasts 60 seconds and can be toggled on/off.\n\nUses depend on quality:\n- Awful: 1 | Poor: 2 | Normal: 4 | Good: 6 | Excellent: 8 | Masterwork: 10 | Legendary: 12</description>
     <graphicData>
       <texPath>Things/Item/Rune/FireShieldRune</texPath>
       <graphicClass>Graphic_Single</graphicClass>
     </graphicData>
+    <apparel>
+      <layers>
+        <li>RuneSlot_Defensive</li>
+      </layers>
+    </apparel>
     <comps>
       <li Class="RuneRim.CompProperties_Rune">
         <abilityDef>RuneRim_FireShield</abilityDef>

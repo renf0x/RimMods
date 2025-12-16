@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
   
-  <!-- Слот для первой руны -->
+  <!-- Первый слот для атакующей руны -->
   <ApparelLayerDef>
-    <defName>RuneSlot1</defName>
-    <label>rune slot 1</label>
+    <defName>RuneSlot_Offensive1</defName>
+    <label>offensive rune slot 1</label>
     <drawOrder>195</drawOrder>
   </ApparelLayerDef>
 
-  <!-- Слот для второй руны -->
+  <!-- Второй слот для атакующей руны -->
   <ApparelLayerDef>
-    <defName>RuneSlot2</defName>
-    <label>rune slot 2</label>
+    <defName>RuneSlot_Offensive2</defName>
+    <label>offensive rune slot 2</label>
     <drawOrder>196</drawOrder>
   </ApparelLayerDef>
 
-  <!-- Слот для третьей руны -->
+  <!-- Слот для защитной руны -->
   <ApparelLayerDef>
-    <defName>RuneSlot3</defName>
-    <label>rune slot 3</label>
+    <defName>RuneSlot_Defensive</defName>
+    <label>defensive rune slot</label>
     <drawOrder>197</drawOrder>
   </ApparelLayerDef>
 

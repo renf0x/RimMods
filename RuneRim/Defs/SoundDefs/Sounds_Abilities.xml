@@ -10,8 +10,8 @@
     <subSounds>
       <li>
         <grains>
-          <li Class="AudioGrain_Folder">
-            <clipFolderPath>Abilities</clipFolderPath>
+          <li Class="AudioGrain_Clip">
+            <clipPath>Abilities/FireShield_Toggle</clipPath>
           </li>
         </grains>
         <volumeRange>45~55</volumeRange>

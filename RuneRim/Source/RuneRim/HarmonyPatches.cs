@@ -12,8 +12,117 @@ namespace RuneRim
     {
         static HarmonyPatches()
         {
-            var harmony = new Harmony("yourname.runerim");
+            var harmony = new Harmony("r40x.runerim");
             harmony.PatchAll();
+        }
+    }
+
+    // Патч для переопределения проверки конфликтов между рунами
+    [HarmonyPatch(typeof(ApparelUtility), "CanWearTogether")]
+    public static class ApparelUtility_CanWearTogether_Patch
+    {
+        public static void Postfix(ThingDef A, ThingDef B, BodyDef body, ref bool __result)
+        {
+            // Если уже есть конфликт, проверяем, не являются ли оба предмета атакующими рунами
+            if (!__result)
+            {
+                var slot1Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive1");
+                var slot2Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive2");
+
+                if (slot1Def == null || slot2Def == null) return;
+
+                // Проверяем, имеют ли оба предмета оба атакующих слота
+                bool AHasBothSlots = A.apparel?.layers != null && 
+                    A.apparel.layers.Contains(slot1Def) && 
+                    A.apparel.layers.Contains(slot2Def);
+
+                bool BHasBothSlots = B.apparel?.layers != null && 
+                    B.apparel.layers.Contains(slot1Def) && 
+                    B.apparel.layers.Contains(slot2Def);
+
+                // Если оба предмета — атакующие руны с двумя слотами, разрешаем носить вместе
+                if (AHasBothSlots && BHasBothSlots)
+                {
+                    __result = true;
+                    Log.Message("RuneRim: Allowing two offensive runes to be worn together");
+                }
+            }
+        }
+    }
+
+    // Патч для динамического назначения слота при надевании руны
+    [HarmonyPatch(typeof(Pawn_ApparelTracker), "Wear")]
+    public static class Pawn_ApparelTracker_Wear_Patch
+    {
+        public static void Prefix(Pawn_ApparelTracker __instance, Apparel newApparel)
+        {
+            var compRune = newApparel.TryGetComp<CompRune>();
+            if (compRune == null) return;
+
+            // Проверяем, это атакующая руна с двумя слотами?
+            var layers = newApparel.def.apparel.layers;
+            var slot1Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive1");
+            var slot2Def = DefDatabase<ApparelLayerDef>.GetNamedSilentFail("RuneSlot_Offensive2");
+
+            if (slot1Def == null || slot2Def == null) return;
+
+            if (layers.Contains(slot1Def) && layers.Contains(slot2Def))
+            {
+                // Определяем, какой слот свободен
+                bool slot1Occupied = __instance.WornApparel.Any(a => 
+                    a.def.apparel.layers.Contains(slot1Def) && a != newApparel);
+                
+                bool slot2Occupied = __instance.WornApparel.Any(a => 
+                    a.def.apparel.layers.Contains(slot2Def) && a != newApparel);
+
+                // ВАЖНО: Сохраняем оригинальные layers перед изменением
+                if (compRune.originalLayers == null || compRune.originalLayers.Count == 0)
+                {
+                    compRune.originalLayers = new List<ApparelLayerDef>(layers);
+                }
+
+                // Определяем, какой слот назначить
+                List<ApparelLayerDef> tempLayers = null;
+                
+                if (!slot1Occupied)
+                {
+                    tempLayers = new List<ApparelLayerDef> { slot1Def };
+                    Log.Message($"RuneRim: Assigning {newApparel.Label} to Offensive Slot 1");
+                }
+                else if (!slot2Occupied)
+                {
+                    tempLayers = new List<ApparelLayerDef> { slot2Def };
+                    Log.Message($"RuneRim: Assigning {newApparel.Label} to Offensive Slot 2");
+                }
+                else
+                {
+                    // Оба слота заняты
+                    Log.Warning($"RuneRim: Both offensive slots occupied, cannot wear {newApparel.Label}");
+                    return;
+                }
+
+                // Создаём НОВЫЙ список для layers (не перезаписываем оригинальный Def!)
+                if (tempLayers != null)
+                {
+                    newApparel.def.apparel.layers = tempLayers;
+                }
+            }
+        }
+    }
+
+    // Патч для восстановления оригинальных слоёв при снятии руны
+    [HarmonyPatch(typeof(Pawn_ApparelTracker), "Remove")]
+    public static class Pawn_ApparelTracker_Remove_Patch
+    {
+        public static void Postfix(Apparel ap)
+        {
+            var compRune = ap.TryGetComp<CompRune>();
+            if (compRune != null && compRune.originalLayers != null && compRune.originalLayers.Count > 0)
+            {
+                // Восстанавливаем оригинальные layers
+                ap.def.apparel.layers = new List<ApparelLayerDef>(compRune.originalLayers);
+                Log.Message($"RuneRim: Restored original layers for {ap.Label}");
+            }
         }
     }
 

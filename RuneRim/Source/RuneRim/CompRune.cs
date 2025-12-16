@@ -8,6 +8,7 @@ namespace RuneRim
     {
         private int remainingUses = -1;
         private Pawn lastWearer;
+        public List<ApparelLayerDef> originalLayers; // Хранение оригинальных слоёв для динамического назначения
 
         public CompProperties_Rune Props => (CompProperties_Rune)props;
 
@@ -29,6 +30,7 @@ namespace RuneRim
             base.PostExposeData();
             Scribe_Values.Look(ref remainingUses, "remainingUses", -1);
             Scribe_References.Look(ref lastWearer, "lastWearer");
+            Scribe_Collections.Look(ref originalLayers, "originalLayers", LookMode.Def);
         }
 
         public override void PostPostMake()

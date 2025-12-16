@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
+  <!-- РЕЦЕПТ: Fire Rune -->
   <RecipeDef>
     <defName>RuneRim_MakeFireRune</defName>
     <label>craft fire rune</label>
@@ -48,6 +49,124 @@
       <li>TableStonecutter</li>
     </recipeUsers>
     <researchPrerequisite>Stonecutting</researchPrerequisite>
+  </RecipeDef>
+
+  <!-- РЕЦЕПТ: Lightning Rune -->
+  <RecipeDef>
+    <defName>RuneRim_MakeLightningRune</defName>
+    <label>craft lightning rune</label>
+    <description>Craft a lightning rune that grants lightning strike ability.</description>
+    <jobString>Crafting lightning rune.</jobString>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <effectWorking>CutStone</effectWorking>
+    <soundWorking>Recipe_MakeStoneBlocks</soundWorking>
+    <workAmount>4000</workAmount>
+    <unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+    <ingredients>
+      <li>
+        <filter>
+          <categories>
+            <li>StoneChunks</li>
+          </categories>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Gold</li>
+          </thingDefs>
+        </filter>
+        <count>15</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Steel</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>StoneChunks</li>
+      </categories>
+      <thingDefs>
+        <li>Gold</li>
+        <li>Steel</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <RuneRim_LightningRune>1</RuneRim_LightningRune>
+    </products>
+    <skillRequirements>
+      <Crafting>4</Crafting>
+    </skillRequirements>
+    <workSkill>Crafting</workSkill>
+    <recipeUsers>
+      <li>TableStonecutter</li>
+    </recipeUsers>
+    <researchPrerequisite>Stonecutting</researchPrerequisite>
+  </RecipeDef>
+
+  <!-- РЕЦЕПТ: Fire Shield Rune -->
+  <RecipeDef>
+    <defName>RuneRim_MakeFireShieldRune</defName>
+    <label>craft fire shield rune</label>
+    <description>Craft a fire shield rune that grants protective fire shield ability.</description>
+    <jobString>Crafting fire shield rune.</jobString>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <effectWorking>CutStone</effectWorking>
+    <soundWorking>Recipe_MakeStoneBlocks</soundWorking>
+    <workAmount>4500</workAmount>
+    <unfinishedThingDef>UnfinishedComponent</unfinishedThingDef>
+    <ingredients>
+      <li>
+        <filter>
+          <categories>
+            <li>StoneChunks</li>
+          </categories>
+        </filter>
+        <count>2</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Gold</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Plasteel</li>
+          </thingDefs>
+        </filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>StoneChunks</li>
+      </categories>
+      <thingDefs>
+        <li>Gold</li>
+        <li>Plasteel</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <RuneRim_FireShieldRune>1</RuneRim_FireShieldRune>
+    </products>
+    <skillRequirements>
+      <Crafting>5</Crafting>
+    </skillRequirements>
+    <workSkill>Crafting</workSkill>
+    <recipeUsers>
+      <li>TableStonecutter</li>
+    </recipeUsers>
+    <researchPrerequisite>Smithing</researchPrerequisite>
   </RecipeDef>
 
 </Defs>

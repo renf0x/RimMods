@@ -8,7 +8,7 @@ namespace RuneRim
     {
         private int remainingUses = -1;
         private Pawn lastWearer;
-        public List<ApparelLayerDef> originalLayers; // Хранение оригинальных слоёв для динамического назначения
+        public List<ApparelLayerDef> originalLayers;
 
         public CompProperties_Rune Props => (CompProperties_Rune)props;
 
@@ -63,6 +63,8 @@ namespace RuneRim
                         return Props.baseUses;
                 }
             }
+            
+            Log.Warning($"RuneRim: {parent.Label} has no quality! Using base charges: {Props.baseUses}");
             return Props.baseUses;
         }
 
@@ -72,17 +74,36 @@ namespace RuneRim
             
             if (remainingUses <= 0)
             {
-                // Сохраняем позицию и карту перед уничтожением
-                IntVec3 position = parent.Position;
-                Map map = parent.Map;
                 string runeLabel = parent.Label;
+                
+                // Определяем позицию для дропа осколков
+                IntVec3 dropPosition = IntVec3.Invalid;
+                Map map = null;
+                
+                // Проверяем, где находится руна
+                if (parent.Spawned)
+                {
+                    // Руна на карте (не надета)
+                    dropPosition = parent.Position;
+                    map = parent.Map;
+                }
+                else if (parent.ParentHolder is Pawn_ApparelTracker apparelTracker)
+                {
+                    // Руна надета на колонисте
+                    Pawn wearer = apparelTracker.pawn;
+                    if (wearer != null && wearer.Spawned)
+                    {
+                        dropPosition = wearer.Position;
+                        map = wearer.Map;
+                    }
+                }
                 
                 Messages.Message(
                     $"{runeLabel} has crumbled to dust after exhausting its power.", 
                     MessageTypeDefOf.NeutralEvent
                 );
 
-                // 5% шанс выпадения осколков (1-3 штуки)
+                // 100% шанс выпадения для теста (потом смени на 0.05f)
                 if (Rand.Chance(1f))
                 {
                     ThingDef fragmentDef = DefDatabase<ThingDef>.GetNamedSilentFail("RuneRim_RuneFragment");
@@ -94,23 +115,27 @@ namespace RuneRim
                         Thing fragments = ThingMaker.MakeThing(fragmentDef);
                         fragments.stackCount = fragmentCount;
                         
-                        // Дроп осколков на позицию руны
-                        if (map != null && position.IsValid)
+                        // Дроп осколков
+                        if (map != null && dropPosition.IsValid)
                         {
-                            GenPlace.TryPlaceThing(fragments, position, map, ThingPlaceMode.Near);
+                            GenPlace.TryPlaceThing(fragments, dropPosition, map, ThingPlaceMode.Near);
                             
                             Messages.Message(
                                 $"{fragmentCount}x rune fragment{(fragmentCount > 1 ? "s" : "")} dropped from {runeLabel}!",
-                                new TargetInfo(position, map),
+                                new TargetInfo(dropPosition, map),
                                 MessageTypeDefOf.PositiveEvent
                             );
                             
-                            Log.Message($"RuneRim: Dropped {fragmentCount} rune fragment(s) at {position}");
+                            Log.Message($"RuneRim: Dropped {fragmentCount} rune fragment(s) at {dropPosition}");
+                        }
+                        else
+                        {
+                            Log.Warning($"RuneRim: Cannot drop fragments - invalid position or map. Position: {dropPosition}, Map: {map}");
                         }
                     }
                     else
                     {
-                        Log.Warning("RuneRim: RuneRim_RuneFragment ThingDef not found!");
+                        Log.Error("RuneRim: RuneRim_RuneFragment ThingDef not found!");
                     }
                 }
                 

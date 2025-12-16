@@ -28,6 +28,12 @@
     <thingCategories>
       <li>Apparel</li>
     </thingCategories>
+    <!-- ✅ ИСПРАВЛЕНО: Используем compClass -->
+    <comps>
+      <li>
+        <compClass>CompQuality</compClass>
+      </li>
+    </comps>
   </ThingDef>
 
   <!-- РУНА ОГНЯ (атакующая) -->

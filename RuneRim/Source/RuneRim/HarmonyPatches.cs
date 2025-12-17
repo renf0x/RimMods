@@ -279,7 +279,7 @@ namespace RuneRim
                             for (int i = 0; i < 3; i++)
                             {
                                 FleckMaker.ThrowFireGlow(caster.Position.ToVector3Shifted(), caster.Map, 1.5f);
-                            }
+                            }                            
                         }
                     }
                 }

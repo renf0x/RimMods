@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- РАСТЕНИЕ RUNETHORN -->
+  <ThingDef ParentName="PlantBase">
+    <defName>Plant_Runethorn</defName>
+    <label>runethorn</label>
+    <description>A mystical thorned plant infused with runic energy. Harvesting yields either intact crystalline buds for rune crafting, or veil powder as a byproduct.</description>
+    <statBases>
+      <MaxHitPoints>85</MaxHitPoints>
+      <Nutrition>0.15</Nutrition>
+      <Beauty>3</Beauty>
+      <BeautyOutdoors>3</BeautyOutdoors>
+      <Flammability>0.6</Flammability>
+    </statBases>
+    <graphicData>
+      <texPath>Things/Plant/Runethorn</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+      <drawSize>1.1</drawSize>
+      <shadowData>
+        <volume>(0.3, 0.2, 0.3)</volume>
+      </shadowData>
+    </graphicData>
+    <selectable>true</selectable>
+    <pathCost>14</pathCost>
+    <ingestible>
+      <foodType>Plant</foodType>
+      <preferability>NeverForNutrition</preferability>
+    </ingestible>
+    <plant>
+      <fertilitySensitivity>0.50</fertilitySensitivity>
+      <fertilityMin>0.3</fertilityMin>
+      <growDays>1</growDays>
+      <dieIfLeafless>true</dieIfLeafless>
+      <harvestWork>150</harvestWork>
+      <harvestTag>Standard</harvestTag>
+      <harvestedThingDef>RuneRim_RawRunethorn</harvestedThingDef>
+      <harvestYield>1</harvestYield>
+      <sowWork>170</sowWork>
+      <sowMinSkill>3</sowMinSkill>
+      <topWindExposure>0.15</topWindExposure>
+      <visualSizeRange>0.4~1.0</visualSizeRange>
+      <wildOrder>2</wildOrder>
+      <wildClusterRadius>3</wildClusterRadius>
+      <wildClusterWeight>60</wildClusterWeight>
+      <purpose>Misc</purpose>
+      <humanFoodPlant>false</humanFoodPlant>
+      <sowTags>
+        <li>Ground</li>
+      </sowTags>
+      <neverBlightable>true</neverBlightable>
+      <cavePlant>false</cavePlant>
+    </plant>
+  </ThingDef>
+
+  <!-- RAW RUNETHORN (бутоны + кристаллы для крафта рун) -->
+  <ThingDef ParentName="ResourceBase">
+    <defName>RuneRim_RawRunethorn</defName>
+    <label>runethorn bud</label>
+    <description>Intact crystalline bud harvested from runethorn plant. Contains concentrated runic energy essential for crafting runes. The dark crystal formations and mystical thorns make it a rare and valuable component.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/RawRunethorn</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <drawSize>0.9</drawSize>
+    </graphicData>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <stackLimit>75</stackLimit>
+    <statBases>
+      <MaxHitPoints>70</MaxHitPoints>
+      <MarketValue>3.5</MarketValue>
+      <Mass>0.08</Mass>
+      <Flammability>0.3</Flammability>
+      <DeteriorationRate>1</DeteriorationRate>
+    </statBases>
+    <thingCategories>
+      <li>ResourcesRaw</li>
+    </thingCategories>
+    <burnableByRecipe>false</burnableByRecipe>
+    <smeltable>false</smeltable>
+    <thingSetMakerTags>
+      <li>RewardStandardMidFreq</li>
+    </thingSetMakerTags>
+  </ThingDef>
+
+  <!-- VEIL POWDER (побочный продукт) -->
+  <ThingDef ParentName="ResourceBase">
+    <defName>RuneRim_VeilPowder</defName>
+    <label>veil powder</label>
+    <description>Fine ethereal dust that forms between the thorns of runethorn plants. This substance exists partially beyond the veil, making it valuable for various mystical applications.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/VeilPowder</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <drawSize>0.85</drawSize>
+    </graphicData>
+    <soundInteract>Silver_Drop</soundInteract>
+    <soundDrop>Silver_Drop</soundDrop>
+    <stackLimit>150</stackLimit>
+    <statBases>
+      <MaxHitPoints>50</MaxHitPoints>
+      <MarketValue>1.8</MarketValue>
+      <Mass>0.02</Mass>
+      <Flammability>0.2</Flammability>
+      <DeteriorationRate>0.5</DeteriorationRate>
+    </statBases>
+    <thingCategories>
+      <li>ResourcesRaw</li>
+    </thingCategories>
+    <burnableByRecipe>false</burnableByRecipe>
+    <smeltable>false</smeltable>
+  </ThingDef>
+
+</Defs>

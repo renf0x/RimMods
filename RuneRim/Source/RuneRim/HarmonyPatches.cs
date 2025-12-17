@@ -265,12 +265,6 @@ namespace RuneRim
                     if (existingShield != null)
                     {
                         // Щит уже активен - НЕ ДЕЛАЕМ НИЧЕГО, просто возвращаемся
-                        Messages.Message(
-                            $"{caster.Name.ToStringShort}'s fire shield is already active!",
-                            caster,
-                            MessageTypeDefOf.RejectInput
-                        );
-                        
                         return; // НЕ ПОТРЕБЛЯЕМ ЗАРЯД - выходим ДО общей логики
                     }
                     else
@@ -278,12 +272,6 @@ namespace RuneRim
                         // Щит не активен - ВКЛЮЧАЕМ
                         Hediff hediff = HediffMaker.MakeHediff(hediffDef, caster);
                         caster.health.AddHediff(hediff);
-                        
-                        Messages.Message(
-                            $"{caster.Name.ToStringShort} activated fire shield!",
-                            caster,
-                            MessageTypeDefOf.PositiveEvent
-                        );
                         
                         // Визуальный эффект активации (3 огненные вспышки)
                         if (caster.Spawned && caster.Map != null)
@@ -362,15 +350,6 @@ namespace RuneRim
                     if (map != null && position.IsValid)
                     {
                         GenPlace.TryPlaceThing(fragments, position, map, ThingPlaceMode.Near);
-                        
-                        if (pawn != null)
-                        {
-                            Messages.Message(
-                                $"{pawn.LabelShort} found {fragmentCount}x rune fragment{(fragmentCount > 1 ? "s" : "")} while mining!",
-                                new TargetInfo(position, map),
-                                MessageTypeDefOf.PositiveEvent
-                            );
-                        }
                         
                         Log.Message($"RuneRim: Mined {fragmentCount} rune fragment(s) from {__instance.def.label} at {position}");
                     }

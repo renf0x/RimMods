@@ -1,0 +1,10 @@
+e:\Mods\RuneRim\Assemblies\RuneRim.dll
+e:\Mods\RuneRim\Assemblies\RuneRim.pdb
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.csproj.AssemblyReference.cache
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.GeneratedMSBuildEditorConfig.editorconfig
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.AssemblyInfoInputs.cache
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.AssemblyInfo.cs
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.csproj.CoreCompileInputs.cache
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.csproj.Up2Date
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.dll
+e:\Mods\RuneRim\Source\RuneRim\obj\Release\RuneRim.pdb

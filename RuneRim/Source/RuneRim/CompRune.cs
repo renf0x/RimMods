@@ -74,7 +74,18 @@ namespace RuneRim
 
         public void ConsumeUse()
         {
+            // ВАЖНО: Проверяем, что remainingUses инициализирован
+            if (remainingUses < 0)
+            {
+                remainingUses = CalculateMaxUses();
+            }
+
+            // ВРЕМЕННОЕ ЛОГИРОВАНИЕ для отладки
+            Log.Warning($"RuneRim DEBUG: {parent.Label} consuming charge. Before: {remainingUses}, Max: {CalculateMaxUses()}");
+            
             remainingUses--;
+            
+            Log.Warning($"RuneRim DEBUG: {parent.Label} after consumption: {remainingUses}");
             
             if (remainingUses <= 0)
             {

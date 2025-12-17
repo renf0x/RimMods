@@ -306,57 +306,33 @@ namespace RuneRim
         }
     }
 
-    // ✅ НОВЫЙ ПАТЧ: Дроп осколков рун при добыче камня
-    [HarmonyPatch]
-    public static class Mineable_TrySpawnYield_Patch
+    // ИСПРАВЛЕННЫЙ ПАТЧ: Дроп осколков рун при добыче (ИСПОЛЬЗУЕТ PREFIX!)
+    [HarmonyPatch(typeof(Mineable), "DestroyMined")]
+    public static class Mineable_DestroyMined_Patch
     {
-        static MethodBase TargetMethod()
+        public static void Prefix(Mineable __instance, Pawn pawn)
         {
-            var method = typeof(Mineable).GetMethod(
-                "TrySpawnYield",
-                BindingFlags.Public | BindingFlags.Instance,
-                null,
-                new Type[] { typeof(Map), typeof(bool), typeof(Pawn) },
-                null
-            );
-
-            if (method == null)
-            {
-                Log.Error("RuneRim: Failed to patch Mineable.TrySpawnYield!");
-                return null;
-            }
-
-            Log.Message("RuneRim: Successfully patched Mineable.TrySpawnYield");
-            return method;
-        }
-
-        public static void Postfix(Mineable __instance, Map map, bool moteOnWaste, Pawn pawn)
-        {
-            // 10% шанс выпадения осколков рун
-            if (Rand.Chance(0.1f))
+            if (__instance == null || !__instance.Spawned) return;
+        
+            // ВАЖНО: Сохраняем Map и Position ДО уничтожения
+            Map map = __instance.Map;
+            IntVec3 position = __instance.Position;
+        
+            // 20% шанс выпадения осколков рун
+            if (Rand.Chance(0.2f))
             {
                 ThingDef fragmentDef = DefDatabase<ThingDef>.GetNamedSilentFail("RuneRim_RuneFragment");
-                
+            
                 if (fragmentDef != null)
                 {
-                    // 1-2 осколка
                     int fragmentCount = Rand.RangeInclusive(1, 2);
-                    
                     Thing fragments = ThingMaker.MakeThing(fragmentDef);
                     fragments.stackCount = fragmentCount;
-                    
-                    IntVec3 position = __instance.Position;
-                    
+                
                     if (map != null && position.IsValid)
                     {
                         GenPlace.TryPlaceThing(fragments, position, map, ThingPlaceMode.Near);
-                        
-                        Log.Message($"RuneRim: Mined {fragmentCount} rune fragment(s) from {__instance.def.label} at {position}");
                     }
-                }
-                else
-                {
-                    Log.Error("RuneRim: RuneRim_RuneFragment ThingDef not found!");
                 }
             }
         }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <!-- Снаряд - снежок -->
+    <ThingDef ParentName="BaseBullet">
+        <defName>Projectile_Snowball</defName>
+        <label>snowball</label>
+        <thingClass>WintersWrathHolidayCheer.Projectiles.Projectile_Snowball</thingClass>
+        <graphicData>
+            <texPath>Things/Projectile/Bullet_Small</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <shaderType>TransparentPostLight</shaderType>
+            <color>(240,250,255)</color>
+            <drawSize>0.5</drawSize>
+        </graphicData>
+        <projectile>
+            <damageDef>Snowball</damageDef>
+            <damageAmountBase>0</damageAmountBase>
+            <speed>40</speed>
+        </projectile>
+    </ThingDef>
+</Defs>

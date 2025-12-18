@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Winter's Wrath &amp; Holiday Cheer</name>
+  <author>YourName</author>
+  <packageId>yourname.winterswrath</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>Ludeon.RimWorld</li>
+    <li>Ludeon.RimWorld.Royalty</li>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+  <description>Adds the Evil Snowman mechanoid - a winter-themed hostile unit that attacks colonies during cold seasons.</description>
+</ModMetaData>

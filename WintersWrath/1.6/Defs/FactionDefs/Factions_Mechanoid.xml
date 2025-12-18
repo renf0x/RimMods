@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <FactionDef>
+    <defName>WWH_WinterMechanoids</defName>
+    <label>winter mechanoid hive</label>
+    <description>A hive of winter-adapted self-replicating machines.</description>
+    <pawnSingular>winter mechanoid</pawnSingular>
+    <pawnsPlural>winter mechanoids</pawnsPlural>
+    <fixedName>Winter Mechanoid Hive</fixedName>
+    <categoryTag>Mechanoid</categoryTag>
+    <requiredCountAtGameStart>1</requiredCountAtGameStart>
+    <humanlikeFaction>false</humanlikeFaction>
+    <hidden>false</hidden>
+    <autoFlee>false</autoFlee>
+    <techLevel>Ultra</techLevel>
+    <earliestRaidDays>0</earliestRaidDays>
+    <canSiege>false</canSiege>
+    <canStageAttacks>true</canStageAttacks>
+    <leaderTitle>unit</leaderTitle>
+    <permanentEnemy>true</permanentEnemy>
+    <hostileToFactionlessHumanlikes>true</hostileToFactionlessHumanlikes>
+    <settlementGenerationWeight>0</settlementGenerationWeight>
+    <factionIconPath>World/WorldObjects/DefaultFactionBase</factionIconPath>
+    <colorSpectrum>
+      <li>(0.8, 0.9, 1.0)</li>
+    </colorSpectrum>
+    <raidLootMaker>MechanoidRaidLootMaker</raidLootMaker>
+    <backstoryFilters>
+      <li>
+        <categories>
+          <li>Mechanoid</li>
+        </categories>
+      </li>
+    </backstoryFilters>
+    <structureMemeWeights Inherit="False" />
+    <maxPawnCostPerTotalPointsCurve>
+      <points>
+        <li>(0, 35)</li>
+        <li>(70, 50)</li>
+        <li>(700, 100)</li>
+        <li>(1300, 150)</li>
+        <li>(100000, 10000)</li>
+      </points>
+    </maxPawnCostPerTotalPointsCurve>
+    <pawnGroupMakers>
+      <li>
+        <kindDef>Combat</kindDef>
+        <commonality>100</commonality>
+        <options>
+          <WWH_EvilSnowman>1</WWH_EvilSnowman>
+        </options>
+      </li>
+    </pawnGroupMakers>
+  </FactionDef>
+</Defs>

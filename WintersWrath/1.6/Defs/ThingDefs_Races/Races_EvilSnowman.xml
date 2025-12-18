@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BaseMechanoid">
+    <defName>WWH_EvilSnowman</defName>
+    <label>evil snowman</label>
+    <description>A mechanoid resembling a snowman.</description>
+    <statBases>
+      <MoveSpeed>3.5</MoveSpeed>
+      <ArmorRating_Blunt>0.25</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.15</ArmorRating_Sharp>
+    </statBases>
+    <tools>
+      <li>
+        <label>ice fist</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>12</power>
+        <cooldownTime>2</cooldownTime>
+        <linkedBodyPartsGroup>HeadAttackTool</linkedBodyPartsGroup>
+      </li>
+    </tools>
+    <race>
+      <intelligence>ToolUser</intelligence>
+      <thinkTreeMain>Mechanoid</thinkTreeMain>
+      <body>Lancer</body>
+      <baseHealthScale>1.0</baseHealthScale>
+      <lifeStageAges>
+        <li>
+          <def>MechanoidFullyFormed</def>
+          <minAge>0</minAge>
+        </li>
+      </lifeStageAges>
+    </race>
+    <butcherProducts>
+      <Steel>15</Steel>
+      <Plasteel>5</Plasteel>
+    </butcherProducts>
+  </ThingDef>
+</Defs>

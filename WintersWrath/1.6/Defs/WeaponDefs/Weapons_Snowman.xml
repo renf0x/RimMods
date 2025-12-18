@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- Базовый шаблон для снарядов мода -->
+  <ThingDef Name="WWH_BaseBullet" Abstract="True">
+    <category>Projectile</category>
+    <thingClass>Bullet</thingClass>
+    <altitudeLayer>Projectile</altitudeLayer>
+    <useHitPoints>false</useHitPoints>
+    <neverMultiSelect>true</neverMultiSelect>
+  </ThingDef>
+
+  <!-- Оружие -->
+  <ThingDef ParentName="BaseGun">
+    <defName>WWH_SnowCannon</defName>
+    <label>snow cannon</label>
+    <description>A mechanoid weapon that fires compressed snowballs at high velocity.</description>
+    <techLevel>Spacer</techLevel>
+    <graphicData>
+      <texPath>Things/Item/Equipment/WeaponRanged/SnowMortire</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <soundInteract>Interact_ChargeRifle</soundInteract>
+    <statBases>
+      <WorkToMake>35000</WorkToMake>
+      <Mass>3.5</Mass>
+      <AccuracyTouch>0.70</AccuracyTouch>
+      <AccuracyShort>0.64</AccuracyShort>
+      <AccuracyMedium>0.50</AccuracyMedium>
+      <AccuracyLong>0.35</AccuracyLong>
+      <RangedWeapon_Cooldown>1.5</RangedWeapon_Cooldown>
+    </statBases>
+    <smeltProducts>
+      <Steel>10</Steel>
+      <Plasteel>3</Plasteel>
+    </smeltProducts>
+    <weaponTags>
+      <li>MechanoidGunSnow</li>
+    </weaponTags>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <hasStandardCommand>true</hasStandardCommand>
+        <defaultProjectile>WWH_Snowball</defaultProjectile>
+        <warmupTime>1.0</warmupTime>
+        <range>30</range>
+        <soundCast>Shot_ChargeRifle</soundCast>
+        <soundCastTail>GunTail_Medium</soundCastTail>
+        <muzzleFlashScale>9</muzzleFlashScale>
+      </li>
+    </verbs>
+    <tools>
+      <li>
+        <label>barrel</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>9</power>
+        <cooldownTime>2</cooldownTime>
+      </li>
+    </tools>
+  </ThingDef>
+
+  <!-- Снаряд с ТВОИМ ParentName -->
+  <ThingDef ParentName="WWH_BaseBullet">
+    <defName>WWH_Snowball</defName>
+    <label>snowball</label>
+    <graphicData>
+      <texPath>Things/Projectile/Bullet_Small</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>0.5</drawSize>
+    </graphicData>
+    <projectile>
+      <damageDef>Blunt</damageDef>
+      <damageAmountBase>10</damageAmountBase>
+      <speed>55</speed>
+    </projectile>
+  </ThingDef>
+</Defs>

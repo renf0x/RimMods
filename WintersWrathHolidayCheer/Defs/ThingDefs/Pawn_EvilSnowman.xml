@@ -69,7 +69,7 @@
         </verbs>
         <comps>
             <li Class="WintersWrathHolidayCheer.CompProperties_PreferRangedAttack">
-                <rangedPreferenceChance>0.95</rangedPreferenceChance>
+                
             </li>
             <li Class="WintersWrathHolidayCheer.CompProperties_AutoManhunter">
                 <checkIntervalTicks>60</checkIntervalTicks>

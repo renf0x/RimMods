@@ -1,35 +1,68 @@
 using HarmonyLib;
 using Verse;
-using Verse.AI;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace WintersWrathHolidayCheer.Harmony
+namespace WintersWrathHolidayCheer.HarmonyPatches
 {
-    [HarmonyPatch(typeof(Pawn), "TryGetAttackVerb")]
-    public static class Pawn_TryGetAttackVerb_Patch
+    // Патч 1: Заставляем манхантеров предпочитать дальнюю атаку
+    [HarmonyPatch(typeof(Pawn_MeleeVerbs), "TryGetMeleeVerb")]
+    public static class Pawn_MeleeVerbs_TryGetMeleeVerb_Patch
     {
-        static bool Prefix(Pawn __instance, Thing target, ref Verb __result)
+        static bool Prefix(Pawn_MeleeVerbs __instance, Thing target, ref Verb __result)
         {
+            Pawn pawn = __instance.Pawn;
+            
             // Проверяем наличие нашего компонента
-            var comp = __instance.TryGetComp<CompPreferRangedAttack>();
-            if (comp == null)
-                return true; // Пропускаем, если компонента нет
-
-            // Проверяем, должны ли мы предпочесть дальнюю атаку
-            if (!comp.ShouldPreferRanged())
-                return true; // Используем стандартную логику
+            var comp = pawn?.TryGetComp<CompPreferRangedAttack>();
+            if (comp == null || target == null)
+                return true;
 
             // Ищем дальнобойный verb
             Verb rangedVerb = null;
-            if (__instance.equipment?.PrimaryEq?.PrimaryVerb != null && __instance.equipment.PrimaryEq.PrimaryVerb.verbProps.range > 1.5f)
+            var verbs = pawn.verbTracker?.AllVerbs;
+            if (verbs != null)
             {
-                rangedVerb = __instance.equipment.PrimaryEq.PrimaryVerb;
+                foreach (var verb in verbs)
+                {
+                    if (verb.verbProps.range > 1.5f && verb.Available())
+                    {
+                        rangedVerb = verb;
+                        break;
+                    }
+                }
             }
-            else
+
+            // Если есть дальняя атака и цель в радиусе
+            if (rangedVerb != null)
             {
-                // Ищем среди verbs существа
+                float distance = (pawn.Position - target.Position).LengthHorizontal;
+                
+                if (distance >= rangedVerb.verbProps.minRange && distance <= rangedVerb.verbProps.range)
+                {
+                    // Возвращаем null для melee, чтобы AI использовал ranged
+                    __result = null;
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    // Патч 2: Переопределяем TryGetAttackVerb для приоритета дальней атаки
+    [HarmonyPatch(typeof(Pawn), "TryGetAttackVerb")]
+    public static class Pawn_TryGetAttackVerb_Patch
+    {
+        static void Postfix(Pawn __instance, Thing target, bool allowManualCastWeapons, ref Verb __result)
+        {
+            // Если уже выбран verb, проверяем нужно ли переключиться на дальний
+            var comp = __instance?.TryGetComp<CompPreferRangedAttack>();
+            if (comp == null || target == null)
+                return;
+
+            // Если выбрана ближняя атака, но доступна дальняя - переключаемся
+            if (__result != null && __result.verbProps.range <= 1.5f)
+            {
                 var verbs = __instance.verbTracker?.AllVerbs;
                 if (verbs != null)
                 {
@@ -37,25 +70,17 @@ namespace WintersWrathHolidayCheer.Harmony
                     {
                         if (verb.verbProps.range > 1.5f && verb.Available())
                         {
-                            rangedVerb = verb;
-                            break;
+                            float distance = (__instance.Position - target.Position).LengthHorizontal;
+                            
+                            if (distance >= verb.verbProps.minRange && distance <= verb.verbProps.range)
+                            {
+                                __result = verb;
+                                return;
+                            }
                         }
                     }
                 }
             }
-
-            // Если нашли дальнобойный verb и цель в радиусе действия
-            if (rangedVerb != null && target != null)
-            {
-                float distance = (__instance.Position - target.Position).LengthHorizontal;
-                if (distance >= rangedVerb.verbProps.minRange && distance <= rangedVerb.verbProps.range)
-                {
-                    __result = rangedVerb;
-                    return false; // Блокируем оригинальный метод
-                }
-            }
-
-            return true; // Используем стандартную логику, если дальняя атака недоступна
         }
     }
 }
